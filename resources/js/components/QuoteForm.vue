@@ -161,17 +161,44 @@
         </form>
 
         <div v-if="quoteResult">
-            <div class="text-lg font-bold py-4">
-                {{ quoteResult.length }} Results:
+            <div class="flex justify-between">
+                <div class="text-lg font-bold py-4">
+                    {{
+                        !showAllQuotes
+                            ? "Your Result:"
+                            : allQuotes.length + " Results:"
+                    }}
+                </div>
+                <div
+                    class="toggle-container"
+                    :style="
+                        showAllQuotes
+                            ? 'background-color: #c3f7d1'
+                            : 'background-color: #ccc'
+                    "
+                    @click="toggle"
+                >
+                    <div class="toggle-track">
+                        <div
+                            class="toggle-thumb"
+                            :class="{ 'toggle-on': showAllQuotes }"
+                        ></div>
+                    </div>
+                </div>
             </div>
             <div class="grid gap-4">
                 <Quote
-                    v-for="(q, index) in displayedItems"
+                    v-for="(q, index) in showAllQuotes
+                        ? displayedItems
+                        : quoteResult"
                     :quoteData="q"
                     :key="index"
                 />
             </div>
-            <div class="flex justify-center mt-4 space-x-4">
+            <div
+                class="flex justify-center mt-4 space-x-4"
+                v-show="showAllQuotes"
+            >
                 <button
                     @click="prevPage"
                     :disabled="currentPage === 1"
@@ -209,6 +236,38 @@
     border: 1px solid grey;
     border-radius: 8px;
 }
+.toggle-container {
+    width: 60px;
+    height: 30px;
+    margin-top: 16px;
+    background-color: #ccc;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+}
+
+.toggle-track {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    position: absolute;
+}
+
+.toggle-thumb {
+    width: 26px;
+    height: 26px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.toggle-on {
+    transform: translateX(30px);
+    background-color: #4caf50;
+}
 </style>
 
 <script>
@@ -227,8 +286,8 @@ export default {
                 state: "CT",
                 smoker: "false",
                 gender: "M",
-                term: 15,
-                coverageAmount: "250000",
+                term: 20,
+                coverageAmount: "500000",
                 productId: 1,
                 riskClass: 1,
             },
@@ -237,6 +296,8 @@ export default {
             loading: false,
             errors: [],
             quoteResult: null,
+            allQuotes: null,
+            showAllQuotes: false,
             states: [
                 { code: "AL", name: "Alabama" },
                 { code: "AK", name: "Alaska" },
@@ -294,12 +355,12 @@ export default {
     },
     computed: {
         totalPages() {
-            return Math.ceil(this.quoteResult.length / this.itemsPerPage);
+            return Math.ceil(this.allQuotes.length / this.itemsPerPage);
         },
         displayedItems() {
             let startingIndex = (this.currentPage - 1) * this.itemsPerPage;
             let endingIndex = startingIndex + this.itemsPerPage;
-            return this.quoteResult.slice(startingIndex, endingIndex);
+            return this.allQuotes.slice(startingIndex, endingIndex);
         },
     },
     methods: {
@@ -312,6 +373,9 @@ export default {
             if (this.currentPage < this.totalPages) {
                 this.currentPage += 1;
             }
+        },
+        toggle() {
+            this.showAllQuotes = !this.showAllQuotes;
         },
         validateForm() {
             let errorsArr = [];
@@ -356,7 +420,10 @@ export default {
                         params: queryParams,
                     }
                 );
-                this.quoteResult = response.data.quotes[this.formData.term];
+                this.allQuotes = response.data.quotes[this.formData.term];
+                this.quoteResult = this.allQuotes.filter(
+                    (quote) => quote.faceAmount == this.formData.coverageAmount
+                );
             } catch (err) {
                 console.error("Error: ", err);
                 this.errors.push("An error occurred, plaese try again.");
