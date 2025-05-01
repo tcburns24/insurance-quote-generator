@@ -169,20 +169,28 @@
                             : allQuotes.length + " Results:"
                     }}
                 </div>
-                <div
-                    class="toggle-container"
-                    :style="
-                        showAllQuotes
-                            ? 'background-color: #c3f7d1'
-                            : 'background-color: #ccc'
-                    "
-                    @click="toggle"
-                >
-                    <div class="toggle-track">
-                        <div
-                            class="toggle-thumb"
-                            :class="{ 'toggle-on': showAllQuotes }"
-                        ></div>
+                <div class="toggle-wrap flex py-4">
+                    <span class="px-3 font-bold"
+                        >Show
+                        {{
+                            showAllQuotes ? "Your Result" : "All Results"
+                        }}</span
+                    >
+                    <div
+                        class="toggle-container"
+                        :style="
+                            showAllQuotes
+                                ? 'background-color: #c3f7d1'
+                                : 'background-color: #ccc'
+                        "
+                        @click="toggle"
+                    >
+                        <div class="toggle-track">
+                            <div
+                                class="toggle-thumb"
+                                :class="{ 'toggle-on': showAllQuotes }"
+                            ></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -244,7 +252,6 @@
 .toggle-container {
     width: 60px;
     height: 30px;
-    margin-top: 16px;
     background-color: #ccc;
     border-radius: 15px;
     cursor: pointer;
