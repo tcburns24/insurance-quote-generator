@@ -45,9 +45,8 @@
                     <label
                         for="gender"
                         class="block mb-2 text-sm font-medium text-gray-700"
+                        >Gender</label
                     >
-                        Gender
-                    </label>
                     <select id="gender" v-model="formData.gender" required>
                         <option value disabled selected>Select gender</option>
                         <option value="M">Male</option>
@@ -132,17 +131,23 @@
                             :value="amount"
                             :key="amount"
                         >
-                            ${{ amount }}
+                            {{ format$(amount) }}
                         </option>
                     </select>
                 </div>
             </div>
-            <div>
+            <div class="flex justify-end">
+                <button
+                    @click.prevent="resetForm"
+                    class="px-8 py-2 mr-2 bg-gray-600 text-white rounded-lg"
+                >
+                    Clear Form
+                </button>
                 <button
                     type="submit"
-                    class="px-8 py-2 bg-blue-500 text-white rounded-lg"
+                    class="px-8 py-2 ml-2 bg-blue-500 text-white rounded-lg"
                 >
-                    Generate Quote
+                    {{ loading ? "Loading..." : "Generate Quotes" }}
                 </button>
             </div>
             <div v-if="errors.length" class="errors-container">
@@ -155,23 +160,48 @@
             </div>
         </form>
 
-        <div v-if="loading">Loading...</div>
-
-        <div v-else-if="quoteResult">
-            <h2>Results:</h2>
+        <div v-if="quoteResult">
+            <h2>{{ quoteResult.length }} Results:</h2>
             <div class="grid gap-4">
-                <div v-for="(val, key) in quoteResult" :key="key">
-                    <span>{{ key }}: </span>
-                    <span>{{ val }}</span>
-                </div>
+                <Quote
+                    v-for="(q, index) in displayedItems"
+                    :quoteData="q"
+                    :key="index"
+                />
+            </div>
+            <div class="flex justify-center mt-4 space-x-4">
+                <button
+                    @click="prevPage"
+                    :disabled="currentPage === 1"
+                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+                >
+                    Previous
+                </button>
+
+                <span class="self-center"
+                    >Page {{ currentPage }} of {{ totalPages }}</span
+                >
+
+                <button
+                    @click="nextPage"
+                    :disabled="currentPage === totalPages"
+                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .form-item {
     padding: 8px;
+    select {
+        border: 1px solid #bdbdbd;
+        border-radius: 10px;
+        padding: 2px;
+    }
 }
 .form-row {
     border: 1px solid grey;
@@ -182,8 +212,12 @@
 <script>
 import { ref, reactive } from "vue";
 import axios from "axios";
+import Quote from "./Quote.vue";
 
 export default {
+    components: {
+        Quote: Quote,
+    },
     data() {
         return {
             formData: {
@@ -196,6 +230,8 @@ export default {
                 productId: 1,
                 riskClass: 1,
             },
+            itemsPerPage: 10,
+            currentPage: 1,
             loading: false,
             errors: [],
             quoteResult: null,
@@ -247,14 +283,34 @@ export default {
                 { code: "VT", name: "Vermont" },
                 { code: "VA", name: "Virginia" },
                 { code: "WA", name: "Washington" },
+                { code: "DC", name: "Washington D.C." },
                 { code: "WV", name: "West Virginia" },
                 { code: "WI", name: "Wisconsin" },
                 { code: "WY", name: "Wyoming" },
-                { code: "DC", name: "Washington D.C." },
             ],
         };
     },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.quoteResult.length / this.itemsPerPage);
+        },
+        displayedItems() {
+            let startingIndex = (this.currentPage - 1) * this.itemsPerPage;
+            let endingIndex = startingIndex + this.itemsPerPage;
+            return this.quoteResult.slice(startingIndex, endingIndex);
+        },
+    },
     methods: {
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage -= 1;
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage += 1;
+            }
+        },
         validateForm() {
             let errorsArr = [];
 
@@ -298,7 +354,8 @@ export default {
                         params: queryParams,
                     }
                 );
-                this.quoteResult = response.data;
+                this.quoteResult = response.data.quotes[this.formData.term];
+                console.log("⭐️ this.quoteResult = ", this.quoteResult);
             } catch (err) {
                 console.error("Error: ", err);
                 this.errors.push("An error occurred, plaese try again.");
@@ -306,9 +363,27 @@ export default {
                 this.loading = false;
             }
         },
+        format$(val) {
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(val);
+        },
         resetForm() {
             this.quoteResult = null;
             this.errors = [];
+            this.formData = {
+                dob: "",
+                state: "",
+                smoker: null,
+                gender: "",
+                term: null,
+                coverageAmount: "",
+                productId: 1,
+                riskClass: 1,
+            };
         },
     },
 };
