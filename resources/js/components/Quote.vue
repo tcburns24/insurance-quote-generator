@@ -1,11 +1,11 @@
 <template>
     <div class="quote-container">
-        <div class="quote-data">
-            <div class="quote-side quote-left">
+        <div class="quote-data flex justify-between">
+            <div class="basis-2/5 quote-left">
                 <h2>Face Amount: {{ format$(quoteData.faceAmount) }}</h2>
                 <p class="prodcode">{{ quoteData.productCode }}</p>
             </div>
-            <div class="quote-side quote-right">
+            <div class="basis-2/5">
                 <h2 class="underline">Premiums</h2>
                 <div class="premium">
                     Monthly: {{ format$(quoteData.monthlyPremium) }}
@@ -20,6 +20,56 @@
                     Annual: {{ format$(quoteData.annuallyPremium) }}
                 </div>
             </div>
+            <div class="basis-1/5">
+                <button
+                    @click="showModal = true"
+                    class="px-7 py-2 bg-green-200 hover:bg-green-300 rounded-lg"
+                >
+                    View
+                </button>
+            </div>
+        </div>
+        <div
+            v-if="showModal"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        >
+            <div class="bg-white p-8 rounded-lg max-w-md w-full relative">
+                <h2 class="text-xl font-bold mb-4">Quote Details</h2>
+
+                <ul class="text-sm text-gray-700">
+                    <li>
+                        <strong>Face Amount:</strong>
+                        {{ format$(quoteData.faceAmount) }}
+                    </li>
+                    <li>
+                        <strong>Product Code:</strong>
+                        {{ quoteData.productCode }}
+                    </li>
+                    <li>
+                        <strong>Monthly Premium:</strong>
+                        {{ format$(quoteData.monthlyPremium) }}
+                    </li>
+                    <li>
+                        <strong>Quarterly Premium:</strong>
+                        {{ format$(quoteData.quarterlyPremium) }}
+                    </li>
+                    <li>
+                        <strong>Semiannual Premium:</strong>
+                        {{ format$(quoteData.semiannuallyPremium) }}
+                    </li>
+                    <li>
+                        <strong>Annual Premium:</strong>
+                        {{ format$(quoteData.annuallyPremium) }}
+                    </li>
+                </ul>
+
+                <button
+                    @click="showModal = false"
+                    class="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg"
+                >
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -30,7 +80,6 @@
     border-radius: 14px;
     padding: 12px;
     .quote-data {
-        display: flex;
         h2 {
             font-weight: 800;
         }
@@ -40,7 +89,7 @@
     }
     .quote-left {
         .prodcode {
-            color: #5c5c5c;
+            color: #949494;
         }
     }
 }
@@ -54,6 +103,11 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    data() {
+        return {
+            showModal: false,
+        };
     },
     methods: {
         format$(val) {

@@ -139,13 +139,13 @@
             <div class="flex justify-end">
                 <button
                     @click.prevent="resetForm"
-                    class="px-8 py-2 mr-2 bg-gray-600 text-white rounded-lg"
+                    class="px-8 py-2 mr-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg"
                 >
                     Clear Form
                 </button>
                 <button
                     type="submit"
-                    class="px-8 py-2 ml-2 bg-blue-500 text-white rounded-lg"
+                    class="px-8 py-2 ml-2 min-w-md max-w-md bg-blue-500 hover:bg-blue-700 text-white rounded-lg"
                 >
                     {{ loading ? "Loading..." : "Generate Quotes" }}
                 </button>
@@ -161,7 +161,9 @@
         </form>
 
         <div v-if="quoteResult">
-            <h2>{{ quoteResult.length }} Results:</h2>
+            <div class="text-lg font-bold py-4">
+                {{ quoteResult.length }} Results:
+            </div>
             <div class="grid gap-4">
                 <Quote
                     v-for="(q, index) in displayedItems"
@@ -173,19 +175,19 @@
                 <button
                     @click="prevPage"
                     :disabled="currentPage === 1"
-                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+                    class="px-4 py-2 bg-green-500 text-white rounded disabled:opacity-50"
                 >
                     Previous
                 </button>
 
-                <span class="self-center"
-                    >Page {{ currentPage }} of {{ totalPages }}</span
-                >
+                <span class="self-center">
+                    Page {{ currentPage }} of {{ totalPages }}
+                </span>
 
                 <button
                     @click="nextPage"
                     :disabled="currentPage === totalPages"
-                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+                    class="px-4 py-2 bg-green-500 text-white rounded disabled:opacity-50"
                 >
                     Next
                 </button>
@@ -355,7 +357,6 @@ export default {
                     }
                 );
                 this.quoteResult = response.data.quotes[this.formData.term];
-                console.log("⭐️ this.quoteResult = ", this.quoteResult);
             } catch (err) {
                 console.error("Error: ", err);
                 this.errors.push("An error occurred, plaese try again.");
