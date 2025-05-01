@@ -1,6 +1,6 @@
 ## About This Repo
 
-This repo contains the code for a coding challenge in reference to the **Full Stack Developer** role at **Simplicity Group** in tropical Summit, New Jersey. 🌴🍹
+This repo contains the code for a coding challenge in reference to the **Full Stack Developer** role at **Simplicity Group** in **_tropical_** Summit, New Jersey. 🌴🍹
 
 ### How to run the application
 
@@ -9,7 +9,7 @@ This repo contains the code for a coding challenge in reference to the **Full St
 1. Navigate to the root of the project
 2. run `npm run dev`
 
-** Terminal 2**
+**Terminal 2**
 
 1. Navigate to the root of the project
 2. run `php artisan serve`
