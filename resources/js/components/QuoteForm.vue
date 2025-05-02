@@ -1,7 +1,12 @@
 <template>
     <div class="container mx-auto p-8">
         <h1 class="text-2xl font-bold mb-6">Quote Generator</h1>
-
+        <Loading
+            :active="loading"
+            :is-full-page="false"
+            loader="bars"
+            color="#32a852"
+        />
         <form
             @submit.prevent="submitForm"
             class="border-solid border-red-400 rounded-md"
@@ -285,11 +290,14 @@
 <script>
 import { ref, reactive } from "vue";
 import axios from "axios";
+import Loading from "vue3-loading-overlay";
+import "vue3-loading-overlay/dist/vue3-loading-overlay.css";
 import Quote from "./Quote.vue";
 
 export default {
     components: {
         Quote: Quote,
+        Loading: Loading,
     },
     data() {
         return {
