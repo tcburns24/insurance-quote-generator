@@ -21,6 +21,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        console.log('Drake Maye and the Patriots! 💚');
     }
 }

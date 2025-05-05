@@ -6,7 +6,7 @@
                 <p class="prodcode">{{ quoteData.productCode }}</p>
             </div>
             <div class="basis-2/5">
-                <h2 class="underline">Premiums</h2>
+                <h2 class="underline">Premiums!</h2>
                 <div class="premium">
                     Monthly: {{ format$(quoteData.monthlyPremium) }}
                 </div>
