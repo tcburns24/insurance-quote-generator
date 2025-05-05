@@ -88,7 +88,7 @@
                             <label
                                 for="smoker-no"
                                 class="ml-2 text-sm font-medium text-gray-900"
-                                >No</label
+                                >i don't smoke anymore</label
                             >
                         </div>
                     </div>
