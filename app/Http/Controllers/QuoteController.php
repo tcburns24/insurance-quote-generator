@@ -1,23 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class QuoteController extends Controller
 {
-    public function getQuote(Request $request)
+    public function postQuote(Request $request)
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'dob' => 'required|date',
             'state' => 'required|string|size:2',
             'smoker' => 'required|boolean',
-            'gender' => 'required|in:male,female',
+            'gender' => 'required|in:M,F',
             'term' => 'required|in:10,15,20,30',
-            'coverage_amount' => 'required|numeric|min:100000|max:1000000',
+            'coverageAmount' => 'required|numeric|min:100000|max:1000000',
         ]);
 
         if ($validator->fails()) {
@@ -29,6 +29,17 @@ class QuoteController extends Controller
                 'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
             ]);
         }
+
+        // After validation success:
+        $quote = Quote::create([
+            'dob' => $request->dob,
+            'state' => $request->state,
+            'smoker' => $request->smoker,
+            'gender' => $request->gender,
+            'term' => (int) $request->term,
+            'coverage_amount' => (int) $request->coverage_amount,
+        ]);
+
 
         // Calculate age from date of birth
         $birthDate = new \DateTime($request->dob);
