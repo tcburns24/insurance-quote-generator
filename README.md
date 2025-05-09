@@ -4,6 +4,8 @@ This repo contains the code for a (fictional) insurance quote generator.
 
 ### How to run the application
 
+First clone the repository and navigate into the root.
+
 **Terminal 1**
 
 1. Navigate to the root of the project
