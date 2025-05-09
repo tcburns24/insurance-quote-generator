@@ -383,16 +383,22 @@ export default {
       }
     },
     async postQuote() {
+      console.log("🗒️ postQuote()");
       if (!this.validateForm()) {
         return;
       }
       this.loading = true;
 
       try {
-        const respose = await axios.post(
-          "http://localhost:8000/api/quote",
-          this.formData
-        );
+        const respose = await axios.post("http://localhost:8000/api/quote", {
+          dob: this.formData.dob,
+          state: this.formData.state,
+          smoker:
+            this.formData.smoker === "true" || this.formData.smoker === true,
+          gender: this.formData.gender,
+          term: Number(this.formData.term),
+          coverage_amount: Number(this.formData.coverageAmount)
+        });
 
         console.log("POST successful:", response.data);
         this.successMessage = "Quote posted successfully!";

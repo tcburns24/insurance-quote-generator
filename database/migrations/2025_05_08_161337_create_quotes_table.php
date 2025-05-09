@@ -16,7 +16,7 @@ class CreateQuotesTable extends Migration
             $table->date('dob');
             $table->string('state', 2);
             $table->boolean('smoker');
-            $table->enum('gender', ['male', 'female']);
+            $table->enum('gender', ['M', 'F']);
             $table->integer('term');
             $table->integer('coverage_amount');
             $table->timestamps();

@@ -17,7 +17,7 @@ class QuoteController extends Controller
             'smoker' => 'required|boolean',
             'gender' => 'required|in:M,F',
             'term' => 'required|in:10,15,20,30',
-            'coverageAmount' => 'required|numeric|min:100000|max:1000000',
+            'coverage_amount' => 'required|numeric|min:100000|max:1000000',
         ]);
 
         if ($validator->fails()) {
@@ -29,16 +29,6 @@ class QuoteController extends Controller
                 'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
             ]);
         }
-
-        // After validation success:
-        $quote = Quote::create([
-            'dob' => $request->dob,
-            'state' => $request->state,
-            'smoker' => $request->smoker,
-            'gender' => $request->gender,
-            'term' => (int) $request->term,
-            'coverage_amount' => (int) $request->coverage_amount,
-        ]);
 
 
         // Calculate age from date of birth
@@ -58,7 +48,10 @@ class QuoteController extends Controller
 
         try {
             // Make the API call to the internal quoting service
-            $response = $this->callQuotingApi($quoteData);
+            $response = $this->callQuotingApi($request->only([
+                'dob', 'state', 'smoker', 'gender', 'term', 'coverage_amount'
+            ]));
+
 
             return response()->json($response)->withHeaders([
                 'Access-Control-Allow-Origin' => '*',
@@ -134,6 +127,16 @@ class QuoteController extends Controller
 
     private function callQuotingApi($data)
     {
-        return Http::post(config('services.quoting_api.url'), $data)->json();
+        // Directly create a new quote record
+        $quote = Quote::create([
+            'dob' => $data['dob'],
+            'state' => $data['state'],
+            'smoker' => $data['smoker'],
+            'gender' => $data['gender'],
+            'term' => $data['term'],
+            'coverage_amount' => $data['coverage_amount'],
+        ]);
+
+        return $quote;
     }
 }
