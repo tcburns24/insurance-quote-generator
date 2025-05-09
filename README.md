@@ -1,6 +1,6 @@
 ## About This Repo
 
-This repo contains the code for a coding challenge in reference to the **Full Stack Developer** role at **Simplicity Group** in **_tropical_** Summit, New Jersey. 🌴🍹
+This repo contains the code for a (fictional) insurance quote generator.
 
 ### How to run the application
 
