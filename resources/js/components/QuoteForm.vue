@@ -1,5 +1,10 @@
 <template>
   <div class="container mx-auto p-8">
+    <div>
+      <router-link to="/posted-quotes">
+        <button class="text-blue-400 mx-3 my-3 font-large">See Submitted Quotes</button>
+      </router-link>
+    </div>
     <h1 class="text-2xl font-bold mb-6">Quote Generator</h1>
     <Loading :active="loading" :is-full-page="false" loader="bars" color="#32a852" />
     <form @submit.prevent="submitForm" class="border-solid border-red-400 rounded-md">

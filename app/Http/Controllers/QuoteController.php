@@ -124,6 +124,13 @@ class QuoteController extends Controller
         }
     }
 
+    public function listPostedQuotes()
+    {
+        $quotes = \App\Models\Quote::orderBy('created_at', 'desc')->get();
+
+        return response()->json($quotes);
+    }
+
 
     private function callQuotingApi($data)
     {

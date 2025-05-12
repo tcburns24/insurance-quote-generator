@@ -9,7 +9,7 @@
 </head>
 <body>
     <div id="app">
-        <quote-form></quote-form>
+        <router-view></router-view> <!-- 👈 Key change here! -->
     </div>
 </body>
 </html>
