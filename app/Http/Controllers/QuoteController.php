@@ -131,6 +131,17 @@ class QuoteController extends Controller
         return response()->json($quotes);
     }
 
+    public function deleteQuote($id)
+    {
+        try {
+            $quote = Quote::findOrFail($id);
+            $quote->delete();
+            return response()->json(['message' => 'Adios quote', $id, '!']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Quote not found'], 404);
+        }
+    }
+
 
     private function callQuotingApi($data)
     {
