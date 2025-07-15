@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import QuoteForm from "../components/QuoteForm.vue";
+import AllCountries from "../components/AllCountries.vue";
 import PostedQuotes from "../components/PostedQuotes.vue";
 
 const routes = [
-    { path: "/", component: QuoteForm },
+    { path: "/", component: AllCountries },
     { path: "/posted-quotes", component: PostedQuotes },
 ];
 

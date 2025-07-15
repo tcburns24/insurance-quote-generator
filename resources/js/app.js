@@ -1,12 +1,11 @@
 import { createApp } from "vue";
 import router from "./router"; // import the router
-import QuoteForm from "./components/QuoteForm.vue";
-import PostedQuotes from "./components/PostedQuotes.vue";
+import AllCountries from "./components/AllCountries.vue";
+import "@coreui/coreui/dist/css/coreui.min.css";
 
 const app = createApp({});
 
-app.component("QuoteForm", QuoteForm);
-app.component("PostedQuotes", PostedQuotes);
+app.component("AllCountries", AllCountries);
 
 app.use(router);
 app.mount("#app");
