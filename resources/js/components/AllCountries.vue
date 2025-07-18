@@ -5,12 +5,14 @@
     </div>
     <div class="accordion europe">
       <CAccordion v-for="region in regions" :key="region">
-        <CAccordionItem :item-key="region">
+        <CAccordionItem>
           <CAccordionHeader>{{ region.name }}</CAccordionHeader>
           <CAccordionBody>
             <ul>
               <li v-for="country in region.countries" :key="country">
-                <span>{{ country.flag }} {{ country.name.common }}</span>
+                <router-link :to="`/country/${country.name.common}`">
+                  <span>{{ country.flag }} {{ country.name.common }}</span>
+                </router-link>
               </li>
             </ul>
           </CAccordionBody>
